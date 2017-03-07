@@ -314,21 +314,11 @@ void Standard::update_transition_state()
 		q_sp.copyTo(_v_att_sp->q_d);
 		_v_att_sp->q_d_valid = true;
 
-		// continually increase mc attitude control as we transition back to mc mode
-		if (_params_standard.back_trans_dur > 0.0f) {
-			float weight = (float)hrt_elapsed_time(&_vtol_schedule.transition_start) / (_params_standard.back_trans_dur *
-					1000000.0f);
-			_mc_roll_weight = weight;
-			_mc_pitch_weight = weight;
-			_mc_yaw_weight = weight;
-			_mc_throttle_weight = weight;
-
-		} else {
-			_mc_roll_weight = 1.0f;
-			_mc_pitch_weight = 1.0f;
-			_mc_yaw_weight = 1.0f;
-			_mc_throttle_weight = 1.0f;
-		}
+		// keep full MC weight during back transition
+		_mc_roll_weight = 1.0f;
+		_mc_pitch_weight = 1.0f;
+		_mc_yaw_weight = 1.0f;
+		_mc_throttle_weight = 1.0f;
 
 		// in fw mode we need the multirotor motors to stop spinning, in backtransition mode we let them spin up again
 		if (_flag_enable_mc_motors) {
