@@ -699,7 +699,7 @@ void Simulator::pollForMAVLinkMessages(bool publish, int udp_port)
 			}
 
 			len = recvfrom(_fd, _buf, sizeof(_buf), 0, (struct sockaddr *)&_srcaddr, &_addrlen);
-			// send hearbeat
+			// send heartbeat
 			mavlink_heartbeat_t hb = {};
 			hb.autopilot = 12;
 			hb.base_mode |= (_vehicle_status.arming_state == vehicle_status_s::ARMING_STATE_ARMED) ? 128 : 0;
@@ -714,7 +714,7 @@ void Simulator::pollForMAVLinkMessages(bool publish, int udp_port)
 						// have a message, handle it
 						handle_message(&msg, publish);
 
-						if (msg.msgid != 0 && (hrt_system_time() - pstart_time > 1000000)) {
+						if (msg.msgid != 0 && (hrt_system_time() - pstart_time > 100000)) {
 							PX4_INFO("Got initial simuation data, running sim..");
 							no_sim_data = false;
 						}
